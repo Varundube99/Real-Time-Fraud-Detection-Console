@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console - Executive Operations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css?v=3.2">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- COMPACT ICON SIDEBAR -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <button class="nav-icon-btn active" data-page="dashboard">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/></svg>
+                    <span class="nav-tooltip">Dashboard</span>
+                </button>
+                <button class="nav-icon-btn" data-page="live">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <span class="nav-tooltip">Live Monitoring</span>
+                </button>
+                <button class="nav-icon-btn" data-page="alerts">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span class="nav-tooltip">Fraud Alerts</span>
+                </button>
+                <button class="nav-icon-btn" data-page="transactions">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span class="nav-tooltip">Transactions Audit</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- GLOBAL APP HEADER -->
+            <header class="app-header">
+                <div class="header-title-group">
+                    <h1>Console</h1>
+                    <p>Real-Time Credit Card Fraud Threat Intelligence & Transaction Ingestion Engine</p>
+                </div>
+                <div class="header-status-group">
+                    <div class="pulse-dot-container">
+                        <span id="header-pulse-dot" class="pulse-dot"></span>
+                        <span id="header-status-text">Standby</span>
+                    </div>
+                    <button id="audio-toggle-btn" class="btn btn-secondary" onclick="toggleAudioChime()" title="Toggle Alert Audio Chime">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span id="audio-status-label">Sound: On</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="sendControl('start')">Launch Stream</button>
+                    <button class="btn btn-danger" onclick="sendControl('stop')">Stop Stream</button>
+                </div>
+            </header>
+
+            <!-- VIEW 1: DASHBOARD -->
+            <section id="page-dashboard" class="page-view active">
+                <!-- TOP 4 KPI CARDS (EXACT MATCH TO REFERENCE IMAGE) -->
+                <div class="kpi-grid">
+                    <!-- CARD 1: FEATURED NEON LIME CARD -->
+                    <div class="kpi-card featured-kpi-lime">
+                        <div class="kpi-header-row">
+                            <svg class="kpi-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span class="kpi-header-title">Total Alerts</span>
+                        </div>
+                        <div class="kpi-val-row">
+                            <span class="kpi-main-val" id="kpi-fraud">127</span>
+                            <span class="kpi-pill-badge">+15%</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 2: TAGGED ASSETS / TOTAL TRANSACTIONS -->
+                    <div class="kpi-card">
+                        <div class="kpi-header-row">
+                            <svg class="kpi-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span class="kpi-header-title">Total Transactions</span>
+                        </div>
+                        <div class="kpi-val-row">
+                            <span class="kpi-main-val" id="kpi-total">12,547</span>
+                            <span class="kpi-pill-badge badge-green">+18%</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: CRITICAL INCIDENT / LEGITIMATE -->
+                    <div class="kpi-card">
+                        <div class="kpi-header-row">
+                            <svg class="kpi-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                            <span class="kpi-header-title">Legitimate Verified</span>
+                        </div>
+                        <div class="kpi-val-row">
+                            <span class="kpi-main-val" id="kpi-genuine">12,420</span>
+                            <span class="kpi-pill-badge badge-green" id="kpi-genuine-pct">99.0%</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 4: ANALYSTS ONLINE / TPM -->
+                    <div class="kpi-card">
+                        <div class="kpi-header-row">
+                            <svg class="kpi-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            <span class="kpi-header-title">Ingestion Rate / Min</span>
+                        </div>
+                        <div class="kpi-val-row">
+                            <span class="kpi-main-val" id="kpi-tpm">572</span>
+                            <span class="kpi-pill-badge badge-green">+10%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INCIDENT TIMELINE CARD (DYNAMIC STREAM TELEMETRY) -->
+                <div class="incident-timeline-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-header-title">Live Stream Incident Timeline</h3>
+                        <svg class="three-dots-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                    </div>
+
+                    <div class="timeline-track-container">
+                        <div class="timeline-line-dashed"></div>
+                        <div class="timeline-nodes-row" id="timeline-nodes-container">
+                            <div style="color:#777; font-size:0.85rem; padding:20px; text-align:center; width:100%;">Awaiting real-time stream telemetry events...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM ANALYTICS ROW: TOTAL VULNERABILITY + CURRENT THREATS (EXACT MATCH TO REFERENCE IMAGE) -->
+                <div class="bottom-analytics-grid">
+                    <!-- CARD 1: TOTAL VULNERABILITY / FRAUD DETECTION TRENDS -->
+                    <div class="analytics-card">
+                        <div class="card-header-flex">
+                            <h3 class="card-header-title">Total Vulnerability & Fraud Prob</h3>
+                            <svg class="three-dots-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                        </div>
+                        <div id="chart-timeline" class="plotly-chart-container"></div>
+                    </div>
+
+                    <!-- CARD 2: CURRENT THREATS BY SEVERITY LEVEL (DONUT PIE CHART) -->
+                    <div class="analytics-card">
+                        <div class="card-header-flex">
+                            <h3 class="card-header-title">Current Threats By Severity Level</h3>
+                            <svg class="three-dots-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                        </div>
+
+                        <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 210px;">
+                            <div id="chart-donut" style="width: 270px; height: 200px; margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DASHBOARD TABLES GRID (RECENT ALERTS & RECENT TRANSACTIONS) -->
+                <div class="dashboard-tables-grid">
+                    <!-- RECENT ALERTS (DASHBOARD SHOWS ONLY 2 NEWEST) -->
+                    <div class="analytics-card">
+                        <div class="card-header-flex">
+                            <h3 class="card-header-title">Recent Alerts</h3>
+                            <a href="#" class="view-all-link" onclick="switchPage('alerts'); return false;">View All Alerts &rarr;</a>
+                        </div>
+                        <div id="recent-alerts-list" class="alerts-stack">
+                            <div class="empty-state">No Active Fraud Alerts</div>
+                        </div>
+                    </div>
+
+                    <!-- RECENT TRANSACTIONS TABLE (DASHBOARD SHOWS ONLY 10 NEWEST) -->
+                    <div class="analytics-card">
+                        <div class="card-header-flex">
+                            <h3 class="card-header-title">Recent Transactions</h3>
+                            <a href="#" class="view-all-link" onclick="switchPage('transactions'); return false;">View All Transactions &rarr;</a>
+                        </div>
+                        <div class="table-scroll-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Time</th>
+                                        <th>Amount (₹)</th>
+                                        <th>Probability</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-transactions-tbody">
+                                    <tr><td colspan="5" class="loading-td">Awaiting stream telemetry...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: LIVE MONITORING CONTROLS -->
+            <section id="page-live" class="page-view">
+                <div class="card-header-flex margin-bottom-24">
+                    <h1 class="card-header-title" style="font-size:1.6rem;">Live Stream Monitoring Controls</h1>
+                </div>
+
+                <div class="dashboard-tables-grid">
+                    <div class="analytics-card">
+                        <h3 class="card-header-title margin-bottom-16">Engine Status & Action Center</h3>
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                            <span style="color:#888; font-size:0.9rem;">Current Mode:</span>
+                            <span id="live-controller-status" class="kpi-pill-badge badge-red">Monitoring Standby</span>
+                        </div>
+                        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                            <button class="btn btn-primary" onclick="sendControl('start')">Start Stream</button>
+                            <button class="btn btn-warning" onclick="sendControl('pause')">Pause</button>
+                            <button class="btn btn-success" onclick="sendControl('resume')">Resume</button>
+                            <button class="btn btn-danger" onclick="sendControl('stop')">Stop</button>
+                            <button class="btn btn-secondary" onclick="sendControl('reset')">Reset Engine</button>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3 class="card-header-title margin-bottom-16">Stream Telemetry Tuning</h3>
+                        <div style="margin-bottom:20px;">
+                            <div style="display:flex; justify-content:space-between; color:#AAA; font-size:0.85rem; margin-bottom:6px;">
+                                <span>Transaction Speed Multiplier:</span>
+                                <span id="speed-val" style="color:var(--accent-lime); font-weight:700;">1.0x</span>
+                            </div>
+                            <input type="range" min="0.1" max="5.0" step="0.1" value="1.0" class="custom-range" oninput="updateSpeedVal(this.value)" onchange="sendSpeed(this.value)">
+                        </div>
+                        <div>
+                            <div style="display:flex; justify-content:space-between; color:#AAA; font-size:0.85rem; margin-bottom:6px;">
+                                <span>Fraud Injection Rate Simulation:</span>
+                                <span id="fraud-val" style="color:var(--accent-lime); font-weight:700;">10.0%</span>
+                            </div>
+                            <input type="range" min="0" max="50" step="1" value="10" class="custom-range" oninput="document.getElementById('fraud-val').textContent = this.value + '.0%'" onchange="sendFraudRate(this.value)">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: ALERTS DEDICATED PAGE -->
+            <section id="page-alerts" class="page-view">
+                <div class="card-header-flex margin-bottom-24">
+                    <div>
+                        <h1 class="card-header-title" style="font-size:1.6rem;">Fraud Alerts Audit</h1>
+                        <p style="color:#777; font-size:0.85rem;">Complete security audit history of all flagged critical transactions</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="downloadAlertsCSV()">Export Alerts CSV</button>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="filter-bar-flex">
+                        <div class="search-input-wrap">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="alerts-search-input" class="search-input" placeholder="Search alerts by ID, Location, Status..." oninput="filterAlertsTable()">
+                        </div>
+                    </div>
+
+                    <div class="table-scroll-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Time</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Probability</th>
+                                    <th>Risk Level</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-alerts-tbody">
+                                <tr><td colspan="7" class="loading-td">No fraud alerts detected.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 4: TRANSACTIONS DEDICATED PAGE -->
+            <section id="page-transactions" class="page-view">
+                <div class="card-header-flex margin-bottom-24">
+                    <div>
+                        <h1 class="card-header-title" style="font-size:1.6rem;">Transactions Audit Log</h1>
+                        <p style="color:#777; font-size:0.85rem;">Complete transaction monitoring audit history & deep feature analytics</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="downloadTransactionsCSV()">Export All CSV</button>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="filter-bar-flex">
+                        <div class="search-input-wrap">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="tx-search-input" class="search-input" placeholder="Search transactions by ID, Location, Status..." oninput="filterTransactionsTable()">
+                        </div>
+                        <select id="tx-status-filter" class="filter-select" onchange="filterTransactionsTable()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="Blocked">Blocked / High Risk</option>
+                            <option value="Under Review">Under Review</option>
+                            <option value="Approved">Approved</option>
+                        </select>
+                    </div>
+
+                    <div class="table-scroll-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Time</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Probability</th>
+                                    <th>Risk Level</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-transactions-tbody">
+                                <tr><td colspan="7" class="loading-td">No transactions recorded yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- TRANSACTION INVESTIGATION DETAIL MODAL -->
+    <div id="investigation-modal" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-tx-id">Transaction Details</h2>
+                    <span id="modal-timestamp" style="font-size:0.78rem; color:#888;">Timestamp: --</span>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="modal-grid-2col">
+                <div class="detail-metric-card">
+                    <div class="detail-label">Amount & Status</div>
+                    <div id="modal-amount" class="detail-val">₹0.00</div>
+                    <div style="margin-top:6px;">
+                        <span id="modal-decision-badge" class="kpi-pill-badge">APPROVED</span>
+                    </div>
+                </div>
+
+                <div class="detail-metric-card">
+                    <div class="detail-label">Fraud Probability & Risk</div>
+                    <div id="modal-prob" class="detail-val" style="color:var(--accent-lime);">0.0%</div>
+                    <div style="font-size:0.75rem; color:#888; margin-top:4px;">
+                        Risk Level: <span id="modal-risk-level" style="color:#FFF; font-weight:700;">Low</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-grid-2col">
+                <div class="detail-metric-card">
+                    <div class="detail-label">Merchant & Location</div>
+                    <div id="modal-merchant" style="font-weight:700; color:#FFF; margin-top:4px;">Merchant: --</div>
+                    <div id="modal-location" style="font-size:0.8rem; color:#888; margin-top:2px;">Location: --</div>
+                </div>
+
+                <div class="detail-metric-card">
+                    <div class="detail-label">Device & Inference Latency</div>
+                    <div id="modal-device" style="font-weight:700; color:#FFF; margin-top:4px;">Device: Mobile</div>
+                    <div id="modal-latency" style="font-size:0.8rem; color:#888; margin-top:2px;">Inference Time: 2.1 ms</div>
+                </div>
+            </div>
+
+            <div style="margin-top:16px;">
+                <div class="detail-label" style="margin-bottom:8px;">Model Anonymized Feature Vector (V1 - V28)</div>
+                <div id="modal-features-grid" class="features-grid">
+                    <div class="loading-td">Loading feature vector...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js?v=3.2"></script>
+</body>
+</html>
+
