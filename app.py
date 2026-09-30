@@ -25,15 +25,27 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional
 from collections import deque, Counter
+import threading
 
 import joblib
 import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import streamlit as st
-import threading
-from streamlit_autorefresh import st_autorefresh
+try:
+    import plotly.express as px
+    import plotly.graph_objects as go
+except ImportError:
+    px = None
+    go = None
+
+try:
+    import streamlit as st
+except ImportError:
+    st = None
+
+try:
+    from streamlit_autorefresh import st_autorefresh
+except ImportError:
+    st_autorefresh = None
 from monitoring_service import MonitoringService
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
